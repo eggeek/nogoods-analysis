@@ -2,7 +2,9 @@
 
 * input: instance folders, each folder contains: `*.csv, *.mzn, *.dzn`, for example:
 
-  ```
+```
+#!
+
   ├── input
   │   ├── pizza_search1a
   │   │   ├── pizza_search1a.csv
@@ -12,9 +14,7 @@
   │       ├── pizza_search1b.csv
   │       ├── pizza_search1b.dzn
   │       └── pizza_search1b.mzn
-  ```
-
-  ​
+```
 
 * src
 
@@ -27,4 +27,3 @@
   * `V` is variable (e.g. `objective`)
   * `op` is operator: `>=, >, <=, <, =, !=`
 * only consider fact in format: `A[num] op A[num]` and `num op num`
-
