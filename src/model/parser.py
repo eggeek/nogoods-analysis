@@ -3,6 +3,17 @@ import re
 pat_von = re.compile('([a-zA-Z0-9\_\[\]]+)(>=|<=|>|<|!=|==|=)(\-?\d+\.?\d*|true|false)')
 pat_idx = re.compile('\[(\d+)\]')
 
+def to_numeric(s):
+  if s == 'true':
+    return True
+  elif s == 'false':
+    return False
+  else:
+    try:
+      return int(s)
+    except Exception:
+      return s
+
 def gen_label(num):
   label = ''
   if num == 0:
@@ -19,8 +30,8 @@ def parse_literal(txt):
   return
   {
     'original': 'used[3]=false'
-    'v': 'used[]',
-    'idx': '3',
+    'v': 'used',
+    'idx': 3,
     'op': '='
     'num': 'false'
     'key': 'used[_]=_'
@@ -30,9 +41,10 @@ def parse_literal(txt):
   if len(comps) != 1:
     raise Exception('Parsing Error:' + txt)
   v, op, num = comps[0]
-  v = pat_idx.sub('[]', v)
   idx = pat_idx.findall(v)
-  idx = idx[0] if len(idx) == 1 else None
+  idx = to_numeric(idx[0]) if len(idx) == 1 else None
+  num = to_numeric(num)
+  v = pat_idx.sub('', v)
   key = '%s%s%s' % (v, op, '_')
   return dict(v=v, idx=idx, op=op, num=num, key=key)
 
@@ -43,8 +55,8 @@ def parse_nogood(nogood):
   [
     {
       'original': 'used[3]=false',
-      'v': 'used[]',
-      'idx': '3',
+      'v': 'used',
+      'idx': 3,
       'op': '=',
       'num': 'false',
       'key': 'used[_]=_',
@@ -71,3 +83,16 @@ def parse_nogood(nogood):
     i['num_label'] = num_label
     res.append(i)
   return res
+
+def parse_dzn(content):
+    res = {}
+    for line in content:
+        name, raw_var = map(lambda x: x.strip(), line.strip(';\n').split('='))
+        # var is list
+        if '[' in raw_var:
+            var = [int(i) for i in raw_var[1:-1].strip().split(',')]
+        # var is a number
+        else:
+            var = int(raw_var)
+        res[name] = var
+    return res
