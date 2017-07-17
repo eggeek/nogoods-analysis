@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import json
+import os
 from collections import defaultdict
 from model import parser
 from model import predicates
@@ -60,7 +61,11 @@ def extract_pattern(nogoods=[], data={}):
     res[pattern].append({'values': values, 'facts': facts})
   return res
 
-def work(csv_path="", dzn_path="", output_path=""):
+def work(instance_path):
+  instance_name = os.path.basename(instance_path)
+  csv_path = instance_path.strip('/') + '/' + '%s.csv' % instance_name
+  dzn_path = instance_path.strip('/') + '/' + '%s.dzn' % instance_name
+  output_path = '../output/%s.json' % instance_name
   nogoods = extract_nogoods(csv_path)
   with open(dzn_path, "r") as f:
     content = f.readlines()

@@ -68,4 +68,4 @@ def gen_facts(values={}, data={}):
         res, desc = p(a, b, arr)
         if res is True:
           facts.add(desc)
-  return list(facts)
+  return sorted(list(facts))
