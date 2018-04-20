@@ -50,15 +50,20 @@ def extract_pattern(nogoods=[], data={}):
   """
   res = defaultdict(list)
   for nogood in nogoods:
-    parsed = parser.parse_nogood(nogood)
-    pattern = ' '.join([literal_transform(i) for i in parsed])
-    values = {}
-    for j in parsed:
-      if j['idx_label'] is not None:
-        values[j['idx_label']] = j['idx']
-      values[j['num_label']] = j['num']
-    facts = predicates.gen_facts(values, data)
-    res[pattern].append({'values': values, 'facts': facts})
+    try:
+      parsed = parser.parse_nogood(nogood)
+      pattern = ' '.join([literal_transform(i) for i in parsed])
+      values = {}
+      for j in parsed:
+        if j['idx_label'] is not None:
+          values[j['idx_label']] = j['idx']
+        values[j['num_label']] = j['num']
+      facts = predicates.gen_facts(values, data)
+      res[pattern].append({'values': values, 'facts': facts})
+    except Exception as e:
+      print 'Nogood: %s' % nogood
+      print e.message
+      print 'The nogood has been ignored.'
   return res
 
 def work(instance_path):
