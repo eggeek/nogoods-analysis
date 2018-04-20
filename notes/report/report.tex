@@ -1,0 +1,232 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{subcaption}
+\title{Data mining techniques for analysing clause learning solvers}
+\author{Shizhe Zhao}
+\date{April 2017}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Constraint programming (CP) is a programming paradigm. It has became an important role for solving discrete optimization problems, and CP solver is highly used by various applications, like scheduling, supply chain and resource allocation. General mechanism for CP solver is backtracking search, a learning solver could generate extra constraints during the search by analysing failure, so that significantly reduce search space, such extra constraints are called no-good. However, such improvements can only happen in running time, and no-goods for one input may no longer valid for another. To achieve a general improvement, we are looking for an approach to apply data mining technique on set of no-goods, so that mined result could reveal deep structure of problem and improve the model. Thus, this literature review includes three part, in section \ref{ng}, we are going to discuss literature about generation and evaluation of no-goods; in section \ref{dm} we are going to discuss some fundamental technique in Data Mining area; in section \ref{cpdm}, we are going to discuss researches which combined data mining techniques and constraint programming and propose our research space.
+\end{abstract}
+
+\section{Introduction}
+
+Constraint programming is a programming paradigm. It has became an important role for solving discrete optimization problems, and CP solver is highly used by various applications, like scheduling, supply chain and resource allocation. Most of those problems are NP-complete, so general approach for CP is backtracking search. A learning solver like \textit{Chuffed} \cite{chu2013improving} could generate extra constraints during the search by analysing failures, so that significantly reduce search space, such extra constraints are called no-goods. However, such improvement can only happen in running time, and no-goods for one input may no longer valid for another. To achieve a general improvement, we are looking for a approach to apply data mining technique on set of no-goods, so that mined result could reveal deep structure of problem and improve the model. Thus, this literature review includes three part, which are the \textbf{Literature review of No-goods}, \textbf{Literature review of Data Mining} and \textbf{Applying Data Mining on no-goods}.
+
+In section \ref{ng}, we are going to discuss researches relevant to no-goods. At beginning, we will show an example problem: triangle search (\ref{triangle search}), it will introduce terminologies we will use in further sections, and reveal the motivation of finding no-goods. Next, we will discuss how to extract no-goods by introducing implication graph. Last, we will discuss evaluation of no-goods.
+
+In section \ref{dm}, we are going to introduce two fundamental technique in Data Mining. At beginning, we will introduce Frequent Itemset Mining, then we will discuss Association Rule Mining and their variations. Finally, we will reveal a challenge in this area.
+
+In section \ref{cpdm}, firstly, we are going to review existing work that combined Data Mining and Constraint Programming, then we will propose our own research plan based on those works.
+
+\section{Literature review of No-goods} \label{ng}
+
+In \textbf{\textit{Constraint Programming}} (CP), literal is a expression like $x_1>=1$, clause is a sorts of disjunctive literals like $x_1 >= 1 \lor x_2<4 \lor \neg x_3 ...$. Constraints are sorts of disjunctive and conjunctive literals must be satisfied. Roughly speaking, for a given CP problem, solver would enumerate assignments to each variable to satisfy all constraints. Let's consider a problem.
+
+\subsection{Example: right-angled triangle search} \label{triangle search}
+
+Integer $x,y,z$ are length of edges of right-angled triangle, and constraints are $x>=3$, $y<=5$, $z>=5$, please find all possible triangle. \\
+To solve the problem, Solver would enumerate assignment of variables one by one, the order can be specified, or it would search in a default order. Let's assume the order is $x, y, z$:
+
+1. make decision on $x$: assign $x=3$,
+
+2. make decision on $y$: assign $y=5$,
+
+3. make decision on $z$: assign $z==5$, since $x=3, y=5, z=5$ is not a right-angled triangle, this is a failed node. The solver would back to a previous decision.
+
+4. make decision on $y$: assign $y=4$,
+
+5. make decision on $z$: assign $z=5$, and we've found a right-angled triangle $x=3, y=4, z=5$
+
+...\\
+Decisions made by solver can be described by a tree, the depth of each node in the tree is called decision level
+
+
+\subsection{Motivation of using no-goods}
+
+% learning
+Solver can encounter lot of failed nodes during the search, and sometimes a failed node can be visited multiple times, which would damp efficiency. To prevent this happen, learning solver would generate conflict clauses while search, and extract new constraints from them. Conflict clauses\cite{tichy2006clause} are set of variable decisions would conflict with constraints. For example, in triangle search (\ref{triangle search}) problem, $(x=3 \land y=5 \land z=5)$ is a conflict clause.
+
+% learnt clause
+However, the number of conflict clauses can still be large, each failed node would generate a conflict clauses. For example if we change the back jumping in triangle search(\ref{triangle search}):
+
+...
+
+3. make decision on $z$: assign $z=5$, failed
+
+4. make decision on $z$: assign $z=6$, failed
+
+...\\
+We would find lot of conflict clauses like $(x=3 \land y=5 \land z=5), (x=3 \land y=5 \land z=6),...$.
+
+Researchers realized that we shouldn't extract constraint from conflict clauses directly, instead, extracting constraint from the reason of failure could be exponentially faster \cite{beame2003understanding}. The reason of failure is also called \textbf{\textit{no-goods}}. To be more specific, no-goods is a of sorts of disjunctive literals: $x_1 \lor x_2 \lor ... \lor x_k$, during the search, the boolean value of no-goods must be true, otherwise solver would end up with failure. For example, in triangle search problem, one of no-goods is $x \neq 3 \lor y \neq 5$.
+
+\subsection{Implication Graph}
+
+However, constraints could be very complicated in practice, so that it is difficult to find no-goods manually. In order to find no-goods automatically, we need implication graph. Implication graph is a DAG (directed acyclic graph), each vertex of graph is a literal, include decision variables and inferred literals.  The directed edge of a vertex is a implication caused by constraint. Doing search algorithm on graph is same as inferring on clauses, if any reachable vertexes conflict with each other, we can claim that there is a failure.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{I-Graph.png}
+    \caption{Example of I-Graph with conflict\cite{tichy2006clause}}
+    \label{fig:igraph}
+\end{figure}
+
+For example, in Figure \ref{fig:igraph}, literal $x_i=c@k$ are vertexes,  $w_i$ are implication inferred from constraints. As we can see, from $x_1=0@4$, along path $(w_1, w_3)$ or $(w_2, w_3)$, we could visit $x_4=1@4$, and from $w_4=1@4$ along $w_4$ and path $(w_5, w_6)$, we could visit $x_5=1@4$ and $x_5=0@4$. In other words, $x_1=0$ implies $x_4=1$, and finally implies both $x_5$ and $\lnot x_5$ are $true$, which is impossible, and those vertexes are called conflict vertexes. Notice that multiple vertexes linking to same vertex by same arc label represent a conjunctive clause. For example, $(x_4=1, x_9=0)$ link to $x_6=1$ by $w_5$ represent $ x_4 \land \lneg x_9 => x_6$.
+
+%and what if x_i, x_j imply x_k independently, and x_k would cause conflict%
+
+When conflict occur, the I-Graph can be split into two part: reason side and conflict side. Reason side doesn't contains any conflict vertexes, the  set of such split is called \textbf{\textit{cut}}, and we can extract no-goods from cut. For example, in Figure \ref{fig:igraph}, $(x_8=0@2, x_4=1@4, x_9=0@3)$ are source vertexes of cut, and we can extract no-goods: $(\lnot x_4 \lor x_8 \lor x_9)$.
+
+I-Graph may contains lot of cuts, usually we only consider cut formed by \textbf{\textit{Unique Implication Points}} (UIPs), which are vertexes separate the high-level decision variable and conflicts. The process of finding cut is called learning. There are many kinds of learning schemes, \textbf{1-UIP} and \textbf{Rel\_Sat} are two widely used schemes. 1-UIP would use UIPs close to conflict vertexes, while Rel\_Sat would use UIPs close to decision variables. For example, in Figure \ref{fig:igraph}, 1-UIP would find cut $(x_8, x_4, x_9)$, while Rel\_Sat would find cut $(x_8, x_1, x_9)$.
+
+The efficiency of learning schemes is quite depend on the property of problem, \textit{Rel\_Sat} would be effective when sub-problems have short and easily derived no-goods \cite{bayardo1997using}; and in \cite{zhang2001efficient}, it states: the shorter the no-good, the more effective the learning scheme but usually problems solving is a dynamic process, learning scheme and search process can affect each other. Thus, scheme choosing is quite empirical, according to plenty experiment, \textit{1-UIP} is outperform other schemes.
+
+\subsection{Evaluate no-goods}
+Although the power of clause learning has been proofed by many industrial applications, it has bad performance in some cases, and the reason of this phenomenon is not well understood. Thus, researchers are looking for approach to evaluate no-goods.
+ 
+One research\cite{audemard2009predicting} have found: in some case, there is a characteristic line between decision level and reached conflicts (see Figure\ref{fig:pline}), so we can collect those information during the search, compute the regression line and predict when decision level would become $0$. They also came up with a concept \textbf{\textit{Literals Blocks Distance}} (LBD) to describe how many influence a no-good can make on other literal in same decision level, and finally developed a static measurement of no-good called LBD score. This measure turns out to be very accurate, so that it could be applied in many cases. For example, we could reorder a 'good' formula to get a better starting of decreasing, or we could share 'good' clauses in the context of parallel solvers.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{predict_line.png}
+    \caption{Relationship between predict number of conflict (y) and actual number of conflict (x)\cite{audemard2009predicting}}
+    \label{fig:pline}
+\end{figure}
+
+ %prof_learning%
+Another research\cite{shishmarev2016learning} try to measure no-good by replaying. They first run \textit{Chuffed} (learning solver) and collect all decision history, then they run \textit{Gecode} (non-learning solver) on same instance and make decision according to history of Chuffed: at any decision level, if there are any records from Chuffed, the Gecode would make the exactly same decision, otherwise, Gecode would perform search by itself. Thus, the size of search tree in Gecode is the size of search tree in Chuffed plus the size of subtrees reduced by no-goods. So we can measure the usefulness of no-good by counting the size of reduced subtrees, see \textit{Chuffed} search tree in figure \ref{fig:stree}. In one of the case study, researchers extracted a implication constraint from the most useful no-goods manually, and such constraint can improve the original model significantly. Such discovery enlightened us that probably we can apply data mining technique on no-goods sets to detect some undiscovered constraints in model.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{search_tree.png}
+    \caption{Chuffed search tree: green diamonds are solutions, square are failures failure\cite{shishmarev2016learning}}
+    \label{fig:stree}
+\end{figure}
+
+\section{Literature review of Data Mining} \label{dm}
+In previous sections, we've explored researches relevant to no-goods and we've learned that they could significantly improve searching performance. However, no-goods are generated in run time, they can only benefit searching process, thus  no-goods for a input may no longer valid for another. To achieve a general improvement, user of solver has to improve the model, but this is not easy, so researchers try to find a automatic or semi-automatic approach to extract undiscovered constraints from no-goods set. Thus, Data Mining comes to our sight. Data mining is a computing process of discovering pattern in data set. We are going to introduce two fundamental Data Mining approaches in this section.
+
+\subsection{Frequent Itemset Mining}
+
+Intuitively speaking, frequent itemset mining is a technique to extract all sets of frequent related items from a transaction database, and those extracted information can be inputs of further mining algorithm (e.g. association rules mining). 
+
+Formally speaking, each item can be described as $<tid, item>$, where $item$ is the name of item (e.g. \textit{milk}), and $tid$ is the identifier of item. Each record $t$ in transaction database $D$ is in form $<t_1, t_2, ... t_k>$. Let $c$ represent any set of items, $support(c) = |\{t \in D | c \in t\}|$, $minsup$ is a constant threshold in algorithm, $c$ is a frequent itemset iff. $support(c) >= minsup$ and all subsets of $c$ are frequent itemset. Here, $support$ provide a measurement of frequency. let $L_k$ be a set of  frequent itemset with $k$ element, and $C_k$ be a candidate set of $L_k$. \textit{Apriori} algorithm can generate $L_k$ in following ways \cite{agrawal1994fast}:
+
+1. generate all $L_1$: all items $t_i$ have appeared in more than $minsup$ transactions;
+
+2. using $L_{k-1}$ generate $C_k$: $C_k = \{a \cup b | a \in L_{k-1}, b \in L_{k-1}, |a \cap b| = 1\}$;
+
+3. $L_k = \{C_k | support(C_k) >= minsup\}$;\\
+We can repeat this process to find all size itemsets. The Table \ref{table:ap} shows the first iteration of \textit{Apriori} algorithm when $minsup=2$: At beginning $L_1$ has filtered infrequent itemset $\{4\}$, $C_2$ is generated from $L_1$, and $L_2$ has filtered infrequent itemset in $C_2$.
+The implementation of \textit{Apriori} involves many data structures to deal with large data and subset searching, see more details about implementation in \cite{agrawal1994fast}.
+
+\begin{table}[!htb]
+    \caption{Example: first iteration of Apriori algorithm}
+    \begin{subtable}{.5\linewidth}
+%      \centering
+        \caption{Database}
+        \begin{tabular}{|c|c|}
+            Tid & Items\\
+            \hline
+            100 & 1 3 4\\
+            200 & 2 3 5\\
+            300 & 1 2 3 5\\
+            400 & 2 5\\
+        \end{tabular}
+    \end{subtable}
+    
+    \begin{subtable}{.5\linewidth}
+%      \centering
+        \caption{$L_1$}
+        \begin{tabular}{|c|c|}
+            Itemset & Support\\
+            \hline
+            \{1\} & 2 \\
+            \{2\} & 3 \\
+            \{3\} & 3 \\
+            \{5\} & 3 \\
+        \end{tabular}
+    \end{subtable}
+    
+    \begin{subtable}{.5\linewidth}
+        \caption{$C_2$}
+        \begin{tabular}{|c|c|}
+            Itemset &  Support\\
+            \hline
+            \{1 2\} & 1 \\
+            \{1 3\} & 2 \\
+            \{1 5\} & 1 \\
+            \{2 3\} & 2 \\
+            \{2 5\} & 3 \\
+            \{3 5\} & 2 \\
+        \end{tabular}
+    \end{subtable}
+    
+    \begin{subtable}{.5\linewidth}
+        \caption{$L_2$}
+        \begin{tabular}{|c|c|}
+            Itemset &  Support\\
+            \hline
+            \{1 3\} & 2 \\
+            \{2 3\} & 2 \\
+            \{2 5\} & 3 \\
+            \{3 5\} & 2 \\
+        \end{tabular}
+    \end{subtable}
+    \label{table:ap}
+\end{table}
+
+\subsection{Association Rule Mining}
+Association rules could be generated from mined frequent itemset. There are some formulas that measure how likely two itemset could form a rule, we will discuss those formulas and the motivation behind them.
+
+Let $supp(c) = sup(c)/|D|$, and let $A$ and $B$ be any itemset, we use the $confidence$ to measure the probability of $A=>B$ is a rule \cite{hipp2000algorithms}:
+$$
+    confidence(A => B) = \frac{supp(A \cup B)}{supp (A)} = P(B|A)
+$$
+$A=>B$ would be regarded as a rule If $confidence(A,B) >= minconf$, where $minconf$ is a threshold like $minsup$. Usually we only consider frequent itemsets in rule mining, otherwise the task would be too complex to finish on time. Those rules which satisfy both minimum support and minimum confidence are called strong association rules. Let $x$ be a frequent itemset, $s$ be non-empty subset of $x$, we can generate all rules from frequent itemset:
+$$
+    rules(x) = \{s=>(x-s) | supp(x) / supp(s) >= minconf\}
+$$
+But $confidence$ could be misleading, for example:
+
+Among 5000 students, 3000 play basketball, 3750 eat cereal, and 2000 both play basketball and eat cereal. The rule $play\ basketball => eat\ cereal$ looks strong since it has $66.7\%$ confidence, but the overall percentage of students eating cereal is $75\%$\cite{aggarwal1998new}. 
+
+As we can see, when $P(B)$ is naturally high, $P(B|A)$ can't reveal relationship between $A$ and $B$, so we should also take $P(B)$ into consideration \cite{brin1997dynamic}:
+$$
+    lift(A=>B) = \frac{supp(A,B)}{supp(A)supp(B)} = \frac{P(B|A)}{P(B)}
+$$
+The new metric $lift$ is in range $[0, \infty]$, small $lift$ (close to $0$) indicates that $P(B|A)$ is much smaller than $P(B)$, which represent a rule $A -> \lnot B$; large $lift$ (significantly larger than $1$), indicates that $P(B|A)$ is much larger than $P(B)$, which represent a rule $A -> B$. But this metric has two problems:
+
+1. $lift \approx 1$ is ambiguous, it may because $A$ and $B$ are independent, or $P(B)$ is naturally large;
+
+2. $lift$ is symmetric $lift(A => B) = \frac{supp(A \cup B)}{supp(A)supp(B)} = lift(B => A)$\\
+Thus \cite{brin1997dynamic} also proposed another measure called $conviction$:
+$$
+    conviction(A=>B) = \frac{supp(A) supp(\bar{B}}{supp(A, \bar{B})} = \frac{P(A)}{P(A|\bar{B})}
+$$
+As we can see, $P(A|\bar{B})$ is the probability of rule $A=>B$ failed, so $conviction$ can be interpreted as take false positive rate into consideration.
+
+There are many kinds of algorithms for mining interesting patterns, we are not able to cover all of them in this literature review, but one thing should be noticed is that a data mining process may uncover many of patterns from a given set of data, so users have to specify their expectations as constraints to confine search space, such strategy is called \textbf{constraint-based mining} \cite{han2011data}. This is a open challenge in this area.
+
+\section{Applying Data Mining on no-goods} \label{cpdm}
+
+Before develop our own research space, let's review existing works in combining Data Mining and Constraint Programming.
+
+On on hand, many Data Mining researchers have been interested in \textit{constraint based mining}, that is, the use of constraints to formalize mining problems \cite{de2011constraint}. Constraint Programming could be flexible framework for constraint-based mining\cite{de2008constraint}, and \cite{guns2011itemset} proposed a Constraint Programming approach to solve itemset mining problems. It turns out that even state-of-the-art Data Mining system still outperform the Constraint Programming approach in standard tasks, there are some cases Constraint Programming approach could achieve significant improvement.
+
+On other hand, as we've mentioned in previous section, some Constraint Programming researchers are looking for a Data Mining approach to find undiscovered constraints. \cite{colton2001constraint} mentioned a reformulations system to find pattern from solutions, then experts would interpret those pattern to constraints, the entire workflow is semi-automatic. Based on that work, \cite{charnley2006automatic} introduced a parsing process to translate mined result into constraints, so that the workflow has became fully automatic.
+
+Now, the question of applying Data Mining on no-goods is quite clear. \cite{de2008constraint} and \cite{guns2011itemset} suggest that we could set up a pure Constraint Programming system to deal with itemset mining tasks, thus, further researches should focus on how to describe the pattern we are interested in. \cite{colton2001constraint}, \cite{charnley2006automatic} and related researches could be a good guideline for formalizing pattern and interpreting constraints. Besides, \cite{colton2001constraint} and \cite{charnley2006automatic} are focus on solutions, while we are focus on no-goods which is much more plentiful.
+
+\pagebreak
+
+\bibliographystyle{plain}
+\bibliography{ref}
+\end{document}
