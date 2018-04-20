@@ -1,0 +1,51 @@
+occurrence, reduction, nogood
+ 77, 18649, how[9]>0 objective>=215 how[9]=-1 used[1]=false how[7]=-1 how[5]=-1 how[4]=-1 how[2]=-1 how[1]=-1 how[8]=-1 how[6]>=-2
+ 13, 10459, how[4]=-3 objective>=198 how[9]=-3 how[6]=-3 how[5]=-3 how[6]>0 used[3]=false
+ 6, 10178, objective>=205 used[5]=false how[9]=-5 how[7]=-5 how[6]=-5 how[5]=-5 how[4]=-5 how[2]=-5 how[1]=-5 how[6]>0 how[9]>0
+ 4, 7875, objective>=204 used[2]=false how[8]=-2 how[7]=-2 how[5]=-2 how[4]=-2 how[3]=-2 how[2]=-2 how[1]=-2 how[4]>0 how[9]>=-2
+ 3, 7863, how[9]=-1 how[7]=-1 how[6]=-1 how[5]=-1 how[4]=-1 used[1]=false how[2]=-1 how[1]=-1 objective>=198 how[6]>0 how[9]=-2 how[6]=-2 how[5]=-2 how[4]=-2 how[2]=-2 used[2]=false how[8]=-2
+ 21, 7361, how[3]=-1 objective>=215 how[7]=-1 how[1]=-1 how[5]=-2 how[2]=-2 how[9]=-1 used[2]=false how[9]=-2 how[4]=-1 how[4]=-2 used[1]=false how[5]=-1 how[2]=-1 how[8]>=-2
+ 70, 7279, how[9]=-2 how[8]=-2 how[7]=-2 used[2]=false how[5]=-2 how[4]=-2 how[2]=-2 used[1]=false how[9]=-1 how[8]=-1 how[7]=-1 how[5]=-1 how[4]=-1 how[2]=-1 how[1]=-1 how[1]=-2 how[3]<=0
+ 6, 6849, how[4]!=3 how[9]!=-3
+ 16, 6434, how[9]=-1 how[7]=-1 used[1]=false how[5]=-1 how[4]=-1 how[3]=-1 how[2]=-1 how[1]=-1 objective>=215 how[3]=1 how[9]=-5 how[8]=-5 how[5]=-5 how[4]=-5 how[2]=-5 how[9]=-4 how[8]=-4 how[5]=-4 how[4]=-4 how[2]=-4 how[9]=-3 how[2]=-3 how[5]=-3 how[4]=-3 how[8]=-3 how[8]!=-2
+ 1, 6286, how[8]=-2 how[7]=-2 used[2]=false how[5]=-2 how[4]=-2 how[3]=-2 how[2]=-2 how[1]=-2 how[4]=-3 objective>=198 how[5]=-3 used[3]=false how[9]>=-3
+ 2, 5069, how[9]=-1 how[7]=-1 used[1]=false how[5]=-1 how[4]=-1 how[3]=-1 how[2]=-1 how[1]=-1 objective>=215 how[8]=-5 how[8]=-3 how[2]=-3 how[5]=-5 how[4]=-5 how[2]=-4 how[2]=-5 how[8]=-4 how[5]=-4 how[4]=-4 how[9]=-3 how[9]=-4 how[9]=-5 how[5]=-3 how[4]=-3 how[8]<=-3 how[9]=-2 how[7]=-2 used[2]=false how[5]=-2 how[4]=-2 how[2]=-2 how[1]=-2 how[6]=-2 how[3]>=-4
+ 27, 4850, how[9]=-3 how[8]=-3 how[5]=-3 how[4]=-3 how[2]=-3 how[6]=-3 how[2]!=3
+ 4, 4548, objective>=215 how[6]>0 how[6]=-4 how[9]=-4 how[8]=-4 how[5]=-4 how[4]=-4 how[2]=-4 how[2]!=4
+ 3, 4349, objective>=204 used[2]=false how[8]=-2 how[7]=-2 how[5]=-2 how[4]=-2 how[3]=-2 how[2]=-2 how[1]=-2 how[4]>0 how[9]>=-3
+ 56, 4050, how[5]=-3 how[6]=-3 how[8]=-3 how[2]=-3 how[9]=-3 how[4]=-3 how[8]<=2 how[8]>=4
+ 6, 3984, objective>=198 how[6]>0 how[9]=-5 used[5]=false how[6]=-5 how[5]=-5 how[4]=-5 how[2]=-5 how[8]=-5 how[8]>0
+ 55, 3892, how[4]=-4 how[6]=-4 how[8]=-4 how[2]=-4 how[9]=-4 how[5]=-4 how[8]<=3 how[8]>=5
+ 125, 3816, how[7]=-1 how[4]=-1 how[5]=-1 how[9]=-1 used[1]=false how[2]=-1 how[6]!=1
+ 2, 3722, how[2]==-1 how[2]==-2 how[3]=-1 how[9]=-4 how[5]=-5 how[9]=-5 how[4]=-5 objective>=205 how[5]=-4 how[4]=-4 how[5]=-3 how[9]=-3 how[4]=-3 how[8]==-1 how[7]=-1 how[7]=-2 how[1]=-2 how[9]=-2 how[5]=-2 used[2]=false how[1]=-1 how[4]=-1 how[4]=-2 used[1]=false how[5]=-1 how[9]=-1 how[9]>0
+ 18, 3671, objective>=225 how[4]>0 how[9]=-3 how[8]=-3 used[3]=false how[5]=-3 how[2]=-3 how[6]=-3 how[6]>0
+ 11, 3625, how[6]>0 objective>=198 how[9]=-5 how[8]=-5 how[7]=-5 how[6]=-5 how[5]=-5 how[4]=-5 how[2]=-5 used[5]=false how[7]>0
+ 4, 3267, how[6]>0 how[1]=-2 how[2]=-3 used[2]=false how[9]=-1 how[7]=-2 how[4]=-1 used[1]=false how[5]=-1 objective>=198 how[2]=-4 how[4]=-4 how[6]=1 how[9]=-2 how[4]=-2 how[5]=-2 how[5]=-3 how[2]=-2 how[9]=-3 how[4]=-3 how[9]=-4 how[5]=-4 how[2]=-1 how[8]!=-5
+ 7, 3142, how[6]=-1 how[7]=-5 how[7]=-2 how[1]=-2 how[5]=-2 how[8]=-1 how[8]=-5 how[8]=-2 how[2]=-2 how[2]=-1 how[2]=-5 how[4]=-1 how[4]=-2 used[5]=false how[5]=-1 how[6]>0 how[6]=-5 how[9]=-2 how[5]=-5 how[9]=-1 how[9]=-5 how[4]=-5 objective>=198 used[2]=false how[7]=-1 used[1]=false
+ 37, 3060, how[9]=-1 how[6]=-1 how[5]=-1 how[4]=-1 how[3]=-1 how[2]=-1 how[8]=-1 how[8]!=1
+ 26, 2792, how[9]=-1 how[2]=-1 how[6]=-1 how[5]=-1 how[4]=-1 how[3]=-1 how[8]=-1 how[3]>=2 how[3]<=0
+ 32, 2760, how[2]!=5 how[7]!=-5
+ 10, 2756, how[9]=-1 how[7]=-1 used[1]=false how[5]=-1 how[4]=-1 how[3]=-1 how[2]=-1 how[1]=-1 objective>=215 how[9]=-3 how[5]=-3 how[4]=-3 how[2]=-3 used[3]=false how[8]>=-4
+ 2, 2662, how[7]=-2 how[2]==-1 how[2]==-2 how[3]=-1 how[5]=-4 how[4]=-4 how[8]==-1 how[1]=-2 used[2]=false used[1]=false how[7]=-1 how[5]=-1 how[4]=-1 how[1]=-1 objective>=205 how[7]=-2 how[5]=-3 how[4]=-3 how[5]=-2 how[4]=-2 how[5]=-5 how[4]=-5 how[9]=-5 how[9]!=-4
+ 13, 2634, how[9]=-5 how[8]=-5 how[6]=-5 how[5]=-5 how[4]=-5 how[2]=-5 how[3]=-5 how[2]<=4
+ 11, 2595, how[2]!=5 how[1]>=-4
+ 36, 2568, how[5]>0 objective>=225 how[9]=-1 used[1]=false how[5]=-1 how[4]=-1 how[2]=-1 how[6]>=-2
+ 2, 2504, how[2]==-1 how[2]==-2 how[5]=-5 how[9]=-5 how[4]=-5 how[5]=-4 used[1]=false how[4]=-4 how[5]=-3 how[4]=-3 how[8]==-1 how[7]=-2 how[1]=-2 used[2]=false how[4]=-2 how[5]=-2 objective>=205 how[7]=-1 how[5]=-1 how[4]=-1 how[3]=-1 how[1]=-1 how[9]=-4 how[9]!=-3
+ 4, 2474, how[6]=-1 how[6]>0 how[9]=-1 how[4]=-4 how[5]=-1 how[4]=-5 how[5]=-3 how[2]=-1 how[8]=-4 objective>=198 how[8]=-5 how[2]=-4 how[2]=-3 how[5]=-5 how[2]=-5 how[8]=-3 how[9]=-4 how[9]=-3 how[5]=-4 how[9]=-5 how[4]=-1 how[4]=-3 used[1]=false how[8]>=-1 how[8]<=-3
+ 58, 2433, how[2]!=1 how[7]!=-1
+ 12, 2374, objective>=215 used[4]=false how[9]=-4 how[8]=-4 how[6]=-4 how[5]=-4 how[4]=-4 how[2]=-4 how[6]>0 how[3]>0
+ 46, 2240, how[2]!=1 how[1]!=-1
+ 17, 2193, how[5]=-3 how[2]=-3 how[8]=-3 how[9]=-3 how[6]=-3 how[4]=-3 how[2]<=2 how[2]>=4
+ 82, 2149, how[2]=-2 how[9]=-2 how[7]=-2 how[5]=-2 how[8]=-2 how[4]=-2 how[6]=-2 how[6]>=3 how[6]<=1
+ 7, 2061, how[2]=-4 objective>=198 how[6]>0 how[9]=-4 how[6]=-4 how[5]=-4 how[4]=-4 how[2]!=4
+ 53, 2034, how[2]!=2 how[7]!=-2
+ 6, 1959, how[4]!=4 how[7]!=-4
+ 6, 1959, how[4]!=4 how[1]!=-4
+ 6, 1959, how[4]!=4 how[2]!=-4
+ 6, 1953, how[9]=-4 used[4]=false how[6]=-4 how[5]=-4 how[4]=-4 objective>=215 how[6]>0 how[2]=-4 how[8]=-4
+ 68, 1952, how[8]=-2 how[5]=-2 how[2]=-1 how[2]=-2 how[9]=-1 how[9]=-2 how[4]=-2 how[5]=-1 how[4]=-1 how[8]=-1 how[6]!=1
+ 102, 1922, how[9]=-3 how[8]=-3 how[6]=-3 how[5]=-3 how[4]=-3 how[2]=-3 how[8]!=3
+ 9, 1901, objective>=205 how[6]>0 how[9]=-3 how[8]=-3 how[6]=-3 how[5]=-3 how[4]=-3 how[2]=-3 used[3]=false how[8]>0
+ 4, 1859, objective>=205 used[4]=false how[9]=-4 how[7]=-4 how[6]=-4 how[5]=-4 how[4]=-4 how[1]=-4 how[6]>0 how[9]>0
+ 92, 1759, how[9]=-5 how[8]=-5 how[2]=-5 how[6]=-5 how[5]=-5 how[4]=-5 how[3]=-5 how[7]=-5 how[6]<=4
+ 5, 1754, how[4]!=4 how[9]!=-4
